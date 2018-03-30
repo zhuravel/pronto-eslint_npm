@@ -1,15 +1,17 @@
+# frozen_string_literal: true
+
 require 'pronto'
 require 'shellwords'
 
 module Pronto
   class ESLintNpm < Runner
     CONFIG_FILE = '.pronto_eslint_npm.yml'.freeze
-    CONFIG_KEYS = %w(eslint_executable files_to_lint).freeze
+    CONFIG_KEYS = %w[eslint_executable files_to_lint].freeze
 
     attr_writer :eslint_executable
 
     def eslint_executable
-      @eslint_executable || 'eslint'.freeze
+      @eslint_executable || 'eslint'
     end
 
     def files_to_lint
@@ -61,7 +63,7 @@ module Pronto
     end
 
     def new_message(offence, line)
-      path = line.patch.delta.new_file[:path]
+      path  = line.patch.delta.new_file[:path]
       level = :warning
 
       Message.new(path, line, level, offence['message'], nil, self.class)

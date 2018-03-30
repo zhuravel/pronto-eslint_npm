@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require 'fileutils'
 require 'byebug'
 require 'rspec'
 require 'pronto/eslint_npm'
 
-%w(test eslintignore).each do |repo_name|
+%w[test eslintignore].each do |repo_name|
   RSpec.shared_context "#{repo_name} repo" do
     let(:git) { "spec/fixtures/#{repo_name}.git/git" }
     let(:dot_git) { "spec/fixtures/#{repo_name}.git/.git" }
