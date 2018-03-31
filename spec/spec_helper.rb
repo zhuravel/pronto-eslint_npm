@@ -21,5 +21,8 @@ RSpec.shared_context 'with config', config: true do
 
   before(:each) do
     allow_any_instance_of(Pronto::ESLintNpm).to receive(:config_options).and_return(requested_config)
+
+    # make sure the config is actually read in the example
+    expect_any_instance_of(Pronto::ESLintNpm).to receive(:read_config).and_call_original
   end
 end
