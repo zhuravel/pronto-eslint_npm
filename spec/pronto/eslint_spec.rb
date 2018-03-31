@@ -58,6 +58,15 @@ module Pronto
         end
 
         context(
+          'with cmd_line_opts to include .html',
+          config: { 'cmd_line_opts' => '--ext .html' }
+        ) do
+          it 'returns correct number of errors' do
+            expect(run.count).to eql 5
+          end
+        end
+
+        context(
           'with different eslint executable',
           config: { 'eslint_executable' => './custom_eslint.sh' }
         ) do
@@ -137,6 +146,16 @@ module Pronto
 
         it 'does not include unescaped path' do
           expect(eslint_command_line).not_to include(path)
+        end
+      end
+      
+      context(
+        'with some command line options',
+        config: { 'cmd_line_opts' => '--my command --line opts' }
+      ) do
+        it 'includes the custom command line options' do
+          eslint.read_config
+          expect(eslint_command_line).to include('--my command --line opts')
         end
       end
     end
