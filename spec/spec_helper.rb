@@ -17,10 +17,9 @@ require 'pronto/eslint_npm'
 end
 
 RSpec.shared_context 'with config', config: true do
-  requested_config = metadata[:config].to_yaml
+  requested_config = metadata[:config]
 
-  let(:config_path) { File.join(repo.path.to_s, Pronto::ESLintNpm::CONFIG_FILE) }
-
-  before(:each) { File.write(config_path, requested_config) }
-  after(:each) { FileUtils.rm(config_path) }
+  before(:each) do
+    allow_any_instance_of(Pronto::ESLintNpm).to receive(:config_options).and_return(requested_config)
+  end
 end

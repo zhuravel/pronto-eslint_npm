@@ -22,14 +22,18 @@ module Pronto
       @files_to_lint = regexp.is_a?(Regexp) && regexp || Regexp.new(regexp)
     end
 
-    def read_config
-      config_file = File.join(repo_path, CONFIG_FILE)
-      return unless File.exist?(config_file)
-      config = YAML.load_file(config_file)
+    def config_options
+      @config_options ||=
+        begin
+          config_file = File.join(repo_path, CONFIG_FILE)
+          File.exist?(config_file) && YAML.load_file(config_file) || {}
+        end
+    end
 
-      CONFIG_KEYS.each do |config_key|
-        next unless config[config_key]
-        send("#{config_key}=", config[config_key])
+    def read_config
+      config_options.each do |key, val|
+        next unless CONFIG_KEYS.include?(key.to_s)
+        send("#{key}=", val)
       end
     end
 
@@ -48,7 +52,7 @@ module Pronto
     private
 
     def repo_path
-      @_repo_path ||= @patches.first.repo.path
+      @repo_path ||= @patches.first.repo.path
     end
 
     def inspect(patch)
@@ -75,11 +79,12 @@ module Pronto
 
     def run_eslint(patch)
       Dir.chdir(repo_path) do
-        escaped_file_path = Shellwords.escape(patch.new_file_full_path.to_s)
-        JSON.parse(
-          `#{eslint_executable} #{escaped_file_path} -f json`
-        )
+        JSON.parse `#{eslint_command_line(patch.new_file_full_path.to_s)}`
       end
+    end
+
+    def eslint_command_line(path)
+      "#{eslint_executable} #{Shellwords.escape(path)} -f json"
     end
 
     def clean_up_eslint_output(output)
