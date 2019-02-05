@@ -15,14 +15,14 @@ Gem::Specification.new do |s|
   EOF
 
   s.licenses              = ['MIT']
-  s.required_ruby_version = '>= 2.0.0'
+  s.required_ruby_version = '>= 2.3.0'
 
   s.files            = `git ls-files -z`.split("\x0").select { |f| f.match(%r{^(lib/|(LICENSE|README.md)$)}) }
   s.extra_rdoc_files = ['LICENSE', 'README.md']
   s.require_paths    = ['lib']
   s.requirements << 'eslint (in PATH)'
 
-  s.add_dependency('pronto', '~> 0.9.1')
+  s.add_dependency('pronto', '~> 0.10.0')
   s.add_development_dependency('byebug', '>= 9')
   s.add_development_dependency('rake', '>= 11.0', '< 13')
   s.add_development_dependency('rspec', '~> 3.4')
